@@ -1,5 +1,9 @@
 package docs;
 
+
+/* INITIAL VERSION WITH LOTS OF PROTOTYPES */
+
+
 import java.util.Date;
 
 import org.vaadin.gwtgraphics.client.DrawingArea;
