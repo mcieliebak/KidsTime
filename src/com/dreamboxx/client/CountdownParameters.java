@@ -2,7 +2,46 @@ package com.dreamboxx.client;
 
 
 public class CountdownParameters {
-    
+
+
+
+	/* Animation Canvas */
+	
+	public static final int COUNTDOWN_CANVAS_WIDTH = 1000; //px
+	public static final int COUNTDOWN_CANVAS_HEIGHT = 500; //px
+
+
+	/* Grounds */ 
+	
+	public static final int NUMBER_OF_GROUNDS = 10;
+
+	public static final int GROUND_DEPTH = 5; //px
+	public static final int DISTANCE_BETWEEN_GROUNDS = 32; //px
+	public static final int PADDING_BETWEEN_GROUND_AND_SPRITE = 0; //px
+	public static final int GROUND_WIDTH = 700; //px
+	public static final int GROUND_SIDESHIFT = 100; //px
+	public static final int PADDING_GROUNDS_TOP = 0; //px
+	public static final int PADDING_GROUNDS_LEFT = 30; //px
+
+	
+	/* Sprite */
+	
+	static final int SPRITE_HEIGHT = 30; //px
+	static final int SPRITE_WIDTH = 30; //px
+
+
+	/* ANIMATION TIMES */ 
+
+	private static final int TIME_PER_GROUND = 6000; //milliseconds //TODO: increase to 60'000 for full minutes
+	// public static final int TIME_WAIT_BEFORE_MOVE = 2000; // ms; turn around during this wait
+	//public static final int TIME_WAIT_BEFORE_JUMP = 1000; //ms
+	//public static final int TIME_JUMP = 2000; //ms
+
+
+
+	
+
+
 	public int startLRMove;
 	public int endLRMove;
 	public int startRLMove;
@@ -10,15 +49,15 @@ public class CountdownParameters {
 	
 	public CountdownParameters() {
 		
-		startLRMove = KidsTime.PADDING_GROUNDS_LEFT + KidsTime.GROUND_SIDESHIFT / 2;
-		endLRMove = KidsTime.PADDING_GROUNDS_LEFT + KidsTime.GROUND_WIDTH + KidsTime.GROUND_SIDESHIFT / 2 + - KidsTime.SPRITE_WIDTH;
+		startLRMove = PADDING_GROUNDS_LEFT + GROUND_SIDESHIFT / 2;
+		endLRMove = PADDING_GROUNDS_LEFT + GROUND_WIDTH + GROUND_SIDESHIFT / 2 + - SPRITE_WIDTH;
 		startRLMove = endLRMove;
 		endRLMove = startLRMove;
 		
 	}
 
 	public int getY(int groundNo) {
-		return KidsTime.PADDING_GROUNDS_TOP + (KidsTime.NUMBER_OF_GROUNDS - groundNo) * KidsTime.DISTANCE_BETWEEN_GROUNDS - KidsTime.PADDING_BETWEEN_GROUND_AND_SPRITE - KidsTime.SPRITE_HEIGHT;	
+		return PADDING_GROUNDS_TOP + (NUMBER_OF_GROUNDS - groundNo) * DISTANCE_BETWEEN_GROUNDS - PADDING_BETWEEN_GROUND_AND_SPRITE - SPRITE_HEIGHT;	
 	}
 	
 	public boolean isLRmove(int groundNo) {

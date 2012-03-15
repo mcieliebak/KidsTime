@@ -64,75 +64,6 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class KidsTime implements EntryPoint {
 
-			private static final int TIME_PER_GROUND_IN_MILLISECONDS = 6000; // TODO: increase to 60'000 for full minutes
-	//
-	//		private static final int NUMBER_OF_LINES = 10;
-	//
-	//		private static final int LINE_LENGTH_DIFFERENCE = 80;
-	//
-	//		private static final int BORDER_PADDING_LR = 20;
-	//
-	//		private static final int COUNTDOWN_CANVAS_HEIGHT = 600;
-	//
-	//		private static final int COUNTDOWN_CANVAS_WIDTH = 800;
-	//
-	//		private static final int LINE_DISTANCE = 50;
-	//
-	//		private static final int LINE_HEIGHT = 5;
-	//
-//	private static final int ANIME_HEIGHT = 30;
-//
-//	private static final int ANIME_WIDTH = 30;
-
-
-
-
-	public static final int COUNTDOWN_CANVAS_WIDTH = 1000;
-	public static final int COUNTDOWN_CANVAS_HEIGHT = 500;
-	public static final int NUMBER_OF_GROUNDS = 10;
-
-	/*
-	 * Grounds 
-	 * 
-	 * all sizes are given in pixels
-	 * 
-	 */
-	public static final int GROUND_DEPTH = 5;
-	public static final int DISTANCE_BETWEEN_GROUNDS = 32;
-	public static final int PADDING_BETWEEN_GROUND_AND_SPRITE = 0;
-	public static final int GROUND_WIDTH = 700;
-	public static final int GROUND_SIDESHIFT = 100;
-	public static final int PADDING_GROUNDS_TOP = 0;
-	public static final int PADDING_GROUNDS_LEFT = 30;
-	
-
-	/* ANIMATION TIMES */ 
-
-	/* 
-	 * Total time for one ground: 1 minute
-	 * Walking_time = 60'000 - (times below) 
-	 *
-	 * ALL times are given in Milliseconds
-	 */
-
-	public static final int TIME_WAIT_BEFORE_MOVE = 2000; // turn around during this wait
-	public static final int TIME_WAIT_BEFORE_JUMP = 1000;
-	public static final int TIME_JUMP = 2000;
-
-	static final int SPRITE_HEIGHT = 30;
-	static final int SPRITE_WIDTH = 30;
-
-	
-	int countdownTime = 10;
-	
-	/*
-
-
-
-		HINT: only allow to increase times by 10 second steps, and make all WAIT/JUMP times below 10 seconds. This ensures that we do not have to position sprite „in the middle of a jump“
-
-	 */
-
 	/**
 	 * The message displayed to the user when the server cannot be reached or
 	 * returns an error.
@@ -150,277 +81,22 @@ public class KidsTime implements EntryPoint {
 	/**
 	 * This is the entry point method.
 	 */
-	Canvas canvas;
-	Context2d context;
-	final int canvasHeight = 300;
-	final int canvasWidth = 300;
 
 
-	DrawingArea countdownCanvas;
+	
 	public void onModuleLoad() {
 
-
-		drawSpriteSelection();
-		drawCountdownCanvas();
+		//TODO: initialize properly
 		
-		drawTimeSelection(); // TODO
-
+		CountdownController countdownController = new CountdownController();
 		
-
-
-
-
-		//Prototypes:
-		//		testHorizontalButtons();
-		//		bouncingBall();
-		//		displayClock();
-		//		clickableCircles();
-		//		drawRectangles();
-
+		CountdownAnimation animation = new CountdownAnimation(countdownController);
+		TimeSelection timeSelection = new TimeSelection(countdownController);
+		SpriteSelection spriteSelection = new SpriteSelection(countdownController);		
+		
 	}
 
-	public final static int NUMBER_OF_SPRITES = 1;
-
-	private void drawSpriteSelection() {
-		HorizontalPanel panel = new HorizontalPanel();
-		//panel.setStyleName("demo-buttons");
-		panel.setWidth("100%");
-		panel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-
-
-		// need to use com.google.gwt... since vaadin has its own Image class used in our animation
-		com.google.gwt.user.client.ui.Image[] sprites = new com.google.gwt.user.client.ui.Image[NUMBER_OF_SPRITES];
-		PushButton buttons[] = new PushButton[NUMBER_OF_SPRITES];
-
-		for (int i=0; i < NUMBER_OF_SPRITES; i++) {
-			//TODO: select different images here for other sprites
-			sprites[i] = new com.google.gwt.user.client.ui.Image("images/bunny/Bunny_hopps_frame_000" + (i+1) + ".gif");
-			sprites[i].setPixelSize(30,30);
-			buttons[i] = new PushButton(sprites[i]);
-			buttons[i].setWidth("30px");
-			buttons[i].setHeight("30px");
-			buttons[i].setStylePrimaryName("spriteButton");
-			panel.add(buttons[i]);
-
-		}
-
-		RootPanel.get("spritesContainer").add(panel);
-
-	}
-
-
-
-
-
-	private void drawCountdownCanvas() {
-
-		countdownCanvas = new DrawingArea(COUNTDOWN_CANVAS_WIDTH, COUNTDOWN_CANVAS_HEIGHT);
-		countdownCanvas.setStylePrimaryName("animationContainer");
-		RootPanel.get("animationContainer").add(countdownCanvas);
-
-		drawGrounds();
-		drawGoal();
-
-	}
-
-
-	private void drawGrounds(){
-
-		Rectangle ground;
-		int xLeft, width, yTop, depth;
-
-		for (int i = 0; i < NUMBER_OF_GROUNDS; i++) {
-			if (0 == i % 2) { 
-				// i is even: ground is shifted to the left
-				xLeft =  PADDING_GROUNDS_LEFT;
-				width = GROUND_WIDTH;
-				yTop = PADDING_GROUNDS_TOP + (NUMBER_OF_GROUNDS - i) * DISTANCE_BETWEEN_GROUNDS;
-				depth = GROUND_DEPTH;
-
-			}
-			else {
-				// i is odd: ground is shifted to the right
-				xLeft = PADDING_GROUNDS_LEFT + GROUND_SIDESHIFT;       
-				width = GROUND_WIDTH;
-				yTop = PADDING_GROUNDS_TOP + (NUMBER_OF_GROUNDS - i) * DISTANCE_BETWEEN_GROUNDS;    
-				depth = GROUND_DEPTH;
-
-			}
-
-			ground = new Rectangle(xLeft, yTop, width, depth); 
-			
-			ground.setStrokeWidth(2);
-			ground.setStrokeColor("blue");
-			ground.setFillColor("darkblue");
-			ground.setRoundedCorners(2);
-			
-			countdownCanvas.add(ground);
-		}
-	}
-
-	private void drawGoal() {
-		// TODO:
-	}
-
-	
-	private void drawTimeSelection() {
-		final RadioButton time1RadioButton = new RadioButton("Zeit", "1 Minuten");
-		final RadioButton time2RadioButton = new RadioButton("Zeit", "5 Minuten");
-		final RadioButton time3RadioButton = new RadioButton("Zeit", "10 Minuten");
-
-		time1RadioButton.setValue(true);
-
-		ClickHandler submitHandler = new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				if (time1RadioButton.getValue()) {
-					setCountdownTime(1);
-					startCountdown();
-				}
-
-				if (time2RadioButton.getValue()) {
-					setCountdownTime(5);
-					startCountdown();
-				}
-
-				if (time3RadioButton.getValue()) {
-					setCountdownTime(10);
-					startCountdown();
-				}
 }
-
-		};
-
-		Button submitButton = new Button("Countdown starten");
-		submitButton.addClickHandler(submitHandler);
-
-		VerticalPanel buttonPanel = new VerticalPanel();
-		buttonPanel.add(time1RadioButton);
-		buttonPanel.add(time2RadioButton);
-		buttonPanel.add(time3RadioButton);
-		buttonPanel.add(submitButton);
-		RootPanel.get("controlsContainer").add(buttonPanel);
-
-		
-	}
-
-	
-	private void setCountdownTime(int timeInMinutes) {
-		this.countdownTime = timeInMinutes;
-	}
-
-	private int getCountdownTime() {
-		return countdownTime;
-	}
-	
-	final CountdownParameters params = new CountdownParameters();
-	
-	public void startCountdown() {
-		
-		final int startGround = getCountdownTime() - 1; // TODO: at the moment countdownTime is only in full minutes; improve to consider also seconds
-		int startX;
-		int y;
-		
-		
-		System.out.println("start countdown at " + getTime() +  " with " + getCountdownTime() + " minutes to go." );
-
-		//Initial Position of Sprite for time mm:ss (minutes:seconds):    sprite is on ground mm    fraction to walk (if ss>JUMP TIME):        [ss – (WAIT_BEFORE_JUMP + JUMP)] / walkingTime * GROUND_WIDTH,        where walkingTime = 60-(WAIT_BEFORE_JUMP + JUMP + WAIT_BEFOREMOVE)
-		// TODO: also use seconds to position sprite
-
-		if (params.isLRmove(startGround)) { 
-			startX =  params.startLRMove;
-		}
-		else {
-			startX = params.startRLMove;
-		}
-		
-		y = params.getY(startGround);
-		System.out.println("initial y = " + y);
-		
-		final Image sprite = new Image(startX, y, 30,30, "images/bunny/Bunny_hopps.gif"); // TODO: distinguis left or right movement
-		countdownCanvas.add(sprite);
-		System.out.println("startground = " + startGround);
-		
-		// sprite.setY(sprite.getY() + DISTANCE_BETWEEN_GROUNDS);
-		
-		
-				
-		RepeatingCommand myCommand = new RepeatingCommand() {
-
-			int startX;
-			int endX;
-			int currentGround = startGround;
-			int y;
-			
-			public boolean execute () {
-		
-				// position sprite on starting position on currentGround
-				if (params.isLRmove(currentGround)) {
-					startX =  params.startLRMove;
-					endX = params.endLRMove;
-				}
-				else {
-					startX = params.startRLMove;
-					endX = params.endRLMove;
-				}
-
-				y = params.getY(currentGround);
-				sprite.setY(y);
-				
-
-				System.out.println("currentGround = " + currentGround + " startX = " + startX + ", endX = " + endX);
-				
-				if (currentGround > 0) {
-					moveSpriteAlongLine(startX, endX);
-					System.out.println("end of execute (TRUE) for ground " + currentGround);
-					return true; //moves on to next ground
-				} else {
-					moveSpriteAlongLine(startX, endX);
-					System.out.println("end of execute (FALSE) for ground " + currentGround);
-					return false; //no more next grounds
-				}
-			}
-
-			private void moveSpriteAlongLine(int fromX, int toX) {
-	
-				System.out.println("move alongLine: y = " + sprite.getY());
-				
-				if (fromX < toX) {
-					System.out.println("move from left to right along line " + currentGround);
-					System.out.println("fromX = " + fromX + " toX = " + toX);
-				} else {
-					System.out.println("move from right to left along line " + currentGround);
-					System.out.println("fromX = " + fromX + " toX = " + toX);
-				}
-
-				Animate movement;
-				movement = new Animate(sprite, "x", fromX, toX,  TIME_PER_GROUND_IN_MILLISECONDS); 
-				movement.start();
-
-				// go to next ground
-				currentGround--;
-				
-			}
-		};
-		
-		// execute command once explicitly because scheduled command only starts AFTER initial wait period
-		myCommand.execute(); 
-		if (startGround > 0) { 
-			Scheduler.get().scheduleFixedPeriod(myCommand, TIME_PER_GROUND_IN_MILLISECONDS); 
-		}
-	}
-
-
-
-
-	
-
-	private String getTime() {
-		Date date = new Date();
-		DateTimeFormat dtf = DateTimeFormat.getFormat("dd.MM.yyyy (E) - HH:mm:ss:SS");
-		return(dtf.format(date, TimeZone.createTimeZone(-60)));
-	}
-
-
 
 
 
@@ -429,7 +105,26 @@ public class KidsTime implements EntryPoint {
 	// PROTOTYPES
 	// can be removed!
 
-//	public void startCountdown(final int timeInMinutes) {
+
+
+
+
+
+//Prototypes:
+//		testHorizontalButtons();
+//		bouncingBall();
+//		displayClock();
+//		clickableCircles();
+//		drawRectangles();
+
+
+//	Canvas canvas;
+//	Context2d context;
+//	final int canvasHeight = 300;
+//	final int canvasWidth = 300;
+
+	
+	//	public void startCountdown(final int timeInMinutes) {
 //		//Window.alert("countdown mit " + timeInMinutes + " Minuten startet um " + getTime());
 //
 //
@@ -771,7 +466,5 @@ public class KidsTime implements EntryPoint {
 //
 //
 //
-
-}	
 
 
