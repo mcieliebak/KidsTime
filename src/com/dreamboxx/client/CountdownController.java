@@ -1,3 +1,5 @@
+package com.dreamboxx.client;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,10 +10,13 @@ public class CountdownController {
 	private List<CountdownListener> countdownListeners = new ArrayList<CountdownListener>();
 
 	public int getStartTime() {
+		System.out.println("CountdownController.getSTartTime: starttime is " + startTime);
 		return startTime;
 	}
 	
 	public void updateStartTime(int startTime) {
+		System.out.println("CountdownController.updateSartTime: new starttime is " + startTime);
+
 		this.startTime = startTime;
 		for (CountdownListener cl : countdownListeners){
 			cl.updateStartTime(startTime);

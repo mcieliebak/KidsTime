@@ -1,0 +1,152 @@
+/** Add css rules here for your application. */
+* {
+	margin: 0px;
+	padding: 0px;
+}
+
+html {
+	background-color: #ffffff;
+	text-align: center;
+}
+
+#wrapper {
+	Width: 100%;
+	margin-left: 0px;
+	margin-right: 0px;
+	margin-top: 0px;
+}
+
+#wrapper2 {
+	background-color: #aaaaaa;
+	Width: 100%;
+	height: 300px;
+	margin-left: 0px;
+	margin-right: 0px;
+	margin-top: 0px;
+}
+
+#header {
+	background-image: url(images/header_background.jpg);
+	/** width:560px; **/
+	height: 87px;
+	margin-left: 0px;
+	margin-right: 0px;
+	margin-top: 0px;
+}
+
+#headerLeft {
+	float: left;
+	width: 15%;
+	font-size: 20px;
+}
+
+#logo {
+	
+	width:90%;
+	text-align: center;
+	margin-top: 25px;
+}
+
+#headerCenter {
+	float: left;
+	width: 75%;
+	text-align: center;
+	margin-top: 25px;
+	font-style: bold;
+	font-size: 35px;
+}
+
+#headerRight {
+	float: left;
+	width: 10%;
+	font-size: 8px;
+}
+
+.clr {
+	clear: left;
+}
+
+#menuLeft {
+	float: left;
+	text-align: center; 
+	width: 14%;
+	/* overflow:hidden; /* Alles was über width und height geht wird abgeschnitten und nicht gezeigt */
+}
+
+#menu ul,li {
+	padding: 0px;
+	margin-top: 30px;
+	margin-left: 30px;
+	text-align: center;
+	
+}
+
+#menuLeft    a {
+	display: block;
+	width: 49px;
+	height: 100px;
+}
+
+.buttonCountdown a {
+	background-repeat: no-repeat;
+	background-image: url(images/button_countdown.gif);
+}
+
+.buttonCountdown a:hover {
+	background-repeat: no-repeat;
+	background-image: url(images/button_countdown_hoover.gif);
+}
+
+#menuLeftSeparator {
+	float: left;
+	width: 4px;
+	height: 393px;
+	text-align: center;
+	margin-top: 42px;
+	background-repeat: no-repeat;
+	background-image: url(images/left_column_separator.jpg);
+}
+
+#main {
+	float: left;
+	width: 75%;
+	height: 582px;
+	text-align:center;
+}
+
+#controlsContainer{
+	background-color:#0088ff;
+	height:100px;
+}
+
+#animationContainer{
+	background-color:#ffffff;
+	height:450px;
+	width:100%
+}
+
+#spritesContainer{
+	text-aligh:center;
+	margin-left:auto;
+	margin-right:auto;
+	width: 200px;
+	height:40px;
+	
+}
+
+/* TODO: set nice frame color and width for pushed buttons */
+
+.spriteButton{
+	background-color:#ffffff;
+	 border:4px solid #ffffff;
+}
+.spriteButton:active {
+  border: 4px solid #666;
+}
+
+#menuRight {
+	float: left;
+	width: 10%;
+}
+
+/** Set ids using widget.getElement().setId("idOfElement") */

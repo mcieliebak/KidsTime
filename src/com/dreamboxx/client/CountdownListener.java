@@ -1,3 +1,4 @@
+package com.dreamboxx.client;
 
 public interface CountdownListener {
 	public void updateStartTime(int startTime) ;

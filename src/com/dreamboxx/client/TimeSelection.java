@@ -1,25 +1,29 @@
+package com.dreamboxx.client;
+
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.ui.*;
 
 public class TimeSelection implements CountdownListener {
 
 	private final int[] startTimes = {1, 2, 5, 10}; //start times in minutes
 	private RadioButton starttimeSelectionButtons[];
-
-
-	public TimeSelection(CountdownController countdownController) {
-
+	
+	public TimeSelection(final CountdownController countdownController) {
+		
 		countdownController.addCountdownListener(this);
 
 		
 		// initialize start time buttons
 		starttimeSelectionButtons= new RadioButton[startTimes.length];
 		for (int i = 0; i < startTimes.length; i++) {
-			startTimeSelectionsButtons[i] = new RadioButton("Zeit", startTimes[i] + "Minuten");
+			starttimeSelectionButtons[i] = new RadioButton("Zeit", startTimes[i] + "Minuten");
 		}
 
 		
 		
 		//set default time
-		startTimeSelectionsButtons[0].setValue(true);
+		starttimeSelectionButtons[0].setValue(true);
 
 
 		
@@ -36,7 +40,7 @@ public class TimeSelection implements CountdownListener {
 			public void onClick(ClickEvent event) {
 				for (int i = 0; i < startTimes.length; i++) {
 					if (starttimeSelectionButtons[i].getValue()) {
-						countdownController.setCountdownTime(startTimes[i]);
+						countdownController.updateStartTime(startTimes[i]);
 					}
 				}
 				countdownController.startCountdown();
