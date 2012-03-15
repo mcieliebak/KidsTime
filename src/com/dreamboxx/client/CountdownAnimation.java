@@ -171,7 +171,11 @@ public class CountdownAnimation implements CountdownListener {
 					return true; //moves on to next ground
 				} else {
 					moveSpriteAlongLine(movingSprite[currentGround], startX, endX);
-					countdownController.finishCountdown();
+					
+					//TODO: fix that this is only called AFTER last level is finished
+					//      at the moment this is called when last level is started
+					//      result: StartAnimationButton is enabled even before last level is finished
+					countdownController.finishCountdown(); 
 					return false; //no more next grounds
 				}
 

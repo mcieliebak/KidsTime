@@ -16,7 +16,7 @@ public class CountdownParameters {
 	public static final int NUMBER_OF_GROUNDS = 10;
 
 	public static final int GROUND_DEPTH = 5; //px
-	public static final int DISTANCE_BETWEEN_GROUNDS = 32; //px
+	public static final int DISTANCE_BETWEEN_GROUNDS = 40; //px
 	public static final int PADDING_BETWEEN_GROUND_AND_SPRITE = 0; //px
 	public static final int GROUND_WIDTH = 700; //px
 	public static final int GROUND_SIDESHIFT = 100; //px
@@ -26,13 +26,13 @@ public class CountdownParameters {
 	
 	/* Sprite */
 	
-	static final int SPRITE_HEIGHT = 30; //px
-	static final int SPRITE_WIDTH = 30; //px
+	static final int SPRITE_HEIGHT = 40; //px
+	static final int SPRITE_WIDTH = 40; //px
 
 
 	/* ANIMATION TIMES */ 
 
-	public static final int TIME_PER_GROUND = 6000; //milliseconds //TODO: increase to 60'000 for full minutes
+	public static final int TIME_PER_GROUND = 60000; //milliseconds //TODO: increase to 60'000 for full minutes
 	// public static final int TIME_WAIT_BEFORE_MOVE = 2000; // ms; turn around during this wait
 	//public static final int TIME_WAIT_BEFORE_JUMP = 1000; //ms
 	//public static final int TIME_JUMP = 2000; //ms

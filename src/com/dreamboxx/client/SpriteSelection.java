@@ -41,8 +41,8 @@ public class SpriteSelection implements CountdownListener {
 
 	private void drawSpriteSelection() {
 		HorizontalPanel panel = new HorizontalPanel();
-		panel.setWidth("100%");
-		panel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+			panel.setWidth("100%");
+			panel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 
 
 

@@ -141,7 +141,14 @@ html {
 	 border:4px solid #ffffff;
 }
 .spriteButton:active {
-  border: 4px solid #666;
+  	border: 4px solid #666;
+}
+
+.startTimeSelectionArea {
+	width: 430px;
+	font-style: bold;
+	font-size: 35px;
+	padding-right: 10px;	
 }
 
 #menuRight {
