@@ -122,8 +122,8 @@ public class CountdownAnimation implements CountdownListener {
 
 		y = params.getY(startGround);
 
-		final Image sprite = new Image(startX, y, 50, 70, spriteSelection.getSpriteStill());
-		countdownCanvas.add(sprite);
+//		final Image sprite = new Image(startX, y, 50, 70, spriteSelection.getSpriteStill());
+		//countdownCanvas.add(sprite);
 
 		RepeatingCommand myCommand = new RepeatingCommand() {
 
@@ -171,6 +171,7 @@ public class CountdownAnimation implements CountdownListener {
 					return true; //moves on to next ground
 				} else {
 					moveSpriteAlongLine(movingSprite[currentGround], startX, endX);
+					countdownController.finishCountdown();
 					return false; //no more next grounds
 				}
 

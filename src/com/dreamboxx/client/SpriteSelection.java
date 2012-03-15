@@ -24,6 +24,7 @@ public class SpriteSelection implements CountdownListener {
 	public String getSpriteGoRight() {
 		return SPRITES_IMAGE_PATH + selectedSprite + FILENAME_APPENDIX_GO_RIGHT + ".gif";
 	}
+	
 	public String getSpriteStill() {
 		return SPRITES_IMAGE_PATH + selectedSprite + FILENAME_APPENDIX_STILL + ".gif";
 	}
