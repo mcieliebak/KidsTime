@@ -45,6 +45,8 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 
+import com.allen_sauer.gwt.voices.client.Sound;
+import com.allen_sauer.gwt.voices.client.SoundController;
 import com.dreamboxx.shared.FieldVerifier;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -87,10 +89,38 @@ public class KidsTime implements EntryPoint {
 	public void onModuleLoad() {
 
 		//TODO: initialize properly
+//		
+ // TODO: use uncaught exception handler like below
 		
-		CountdownController countdownController = new CountdownController();
+		// TODO: validate css and html : Ein wichtiger Schritt auf dem Weg zur Standardkonformität ist die Überprüfung des HTML- und CSS-Codes mit dem HTML-Validator und dem CSS-Validator des W3C.
 		
-		CountdownAnimation animation = new CountdownAnimation(countdownController);
+		
+//		GWT.setUncaughtExceptionHandler(new GWT.UncaughtExceptionHandler() {
+//		      public void onUncaughtException(Throwable throwable) {
+//		        String text = "Uncaught exception: ";
+//		        while (throwable != null) {
+//		          StackTraceElement[] stackTraceElements = throwable.getStackTrace();
+//		          text += throwable.toString() + "\n";
+//		          for (int i = 0; i < stackTraceElements.length; i++) {
+//		            text += "    at " + stackTraceElements[i] + "\n";
+//		          }
+//		          throwable = throwable.getCause();
+//		          if (throwable != null) {
+//		            text += "Caused by: ";
+//		          }
+//		        }
+//		        DialogBox dialogBox = new DialogBox(true, false);
+//		        DOM.setStyleAttribute(dialogBox.getElement(), "backgroundColor", "#ABCDEF");
+//		        System.err.print(text);
+//		        text = text.replaceAll(" ", "&nbsp;");
+//		        dialogBox.setHTML("<pre>" + text + "</pre>");
+//		        dialogBox.center();
+//		      }
+//		    });
+		
+	    CountdownController countdownController = new CountdownController();
+		
+		NewCountdownAnimation animation = new NewCountdownAnimation(countdownController);
 		TimeSelection timeSelection = new TimeSelection(countdownController);
 		
 	}

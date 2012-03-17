@@ -13,6 +13,9 @@
 
   <!-- Other module inherits                                      -->
 <inherits name='org.vaadin.gwtgraphics.GWTGraphics' />
+<!-- Inherit sound support -->
+  <inherits name='com.allen_sauer.gwt.voices.gwt-voices'/>
+
 
   <!-- Specify the app entry point class.                         -->
   <entry-point class='com.dreamboxx.client.KidsTime'/>

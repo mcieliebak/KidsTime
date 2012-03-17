@@ -1,5 +1,7 @@
 package com.dreamboxx.client;
 
+import com.allen_sauer.gwt.voices.client.Sound;
+import com.allen_sauer.gwt.voices.client.SoundController;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -46,7 +48,7 @@ public class TimeSelection implements CountdownListener {
 
 		VerticalPanel upDownPanel = new VerticalPanel();
 		upDownPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-//		upDownPanel.setStylePrimaryName(countdownUpDownPanel);
+		//		upDownPanel.setStylePrimaryName(countdownUpDownPanel);
 		upDownPanel.setWidth("70px");
 		upDownPanel.add(upButton);
 		upDownPanel.add(downButton);
@@ -80,7 +82,12 @@ public class TimeSelection implements CountdownListener {
 		ClickHandler startButtonHandler = new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				int startTime = Integer.parseInt(starttimeSelectionLabel.getText());
-				countdownController.updateStartTime(startTime);
+				SoundController soundController = new SoundController();
+				Sound sound = soundController.createSound(Sound.MIME_TYPE_AUDIO_WAV_UNKNOWN,
+						"sounds/gong.wav");
+				sound.setVolume(30);
+				sound.play();
+			countdownController.updateStartTime(startTime);
 				countdownController.startCountdown();
 			}
 		};
@@ -108,8 +115,16 @@ public class TimeSelection implements CountdownListener {
 		buttonImage.setWidth("30px");
 		button.getElement().appendChild(buttonImage.getElement());		
 
+
 		button.addClickHandler(new ClickHandler () {
 			public void onClick(ClickEvent event) {
+
+				SoundController soundController = new SoundController();
+				Sound sound = soundController.createSound(Sound.MIME_TYPE_AUDIO_WAV_UNKNOWN,
+						"sounds/plop.wav");
+				sound.setVolume(20);
+				sound.play();
+
 				int currentTime = Integer.parseInt(starttimeSelectionLabel.getText());
 
 				if ((direction == IS_UP_BUTTON) && (currentTime < CountdownParameters.NUMBER_OF_GROUNDS)) {
@@ -154,36 +169,4 @@ public class TimeSelection implements CountdownListener {
 	public void finishCountdown() {
 		enableStartButton();
 	}
-
-	/* 
-	 * old code
-	 	// initialize start time buttons
-		starttimeSelectionButtons= new RadioButton[startTimes.length];
-		for (int i = 0; i < startTimes.length; i++) {
-			starttimeSelectionButtons[i] = new RadioButton("Zeit", startTimes[i] + "Minuten");
-		}
-
-
-
-		//set default time
-		starttimeSelectionButtons[0].setValue(true);
-
-
-		for (int i = 0; i < startTimes.length; i++) {
-			buttonPanel.add(starttimeSelectionButtons[i]);
-		}
-
-//put start button on UI
-		ClickHandler startButtonHandler = new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				for (int i = 0; i < startTimes.length; i++) {
-					if (starttimeSelectionButtons[i].getValue()) {
-						countdownController.updateStartTime(startTimes[i]);
-					}
-				}
-				countdownController.startCountdown();
-			}
-		};
-
-	 */
 }
