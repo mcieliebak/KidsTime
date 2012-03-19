@@ -18,6 +18,7 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.RepeatingCommand;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.TimeZone;
+import com.google.gwt.media.client.Audio;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Image;
@@ -29,7 +30,11 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class NewCountdownAnimation implements CountdownListener {
 
-
+	private final static String SOUNDS_PATH = "sounds/";
+	private final static String SOUND_GO_NEXT_GROUND = "pieww_jump";
+	private final static String SOUND_GOAL_REACHED = "fanfare";
+	
+	
 	private AbsolutePanel countdownPanel;
 	private final CountdownParameters params = new CountdownParameters();
 	private CountdownController countdownController;
@@ -39,6 +44,7 @@ public class NewCountdownAnimation implements CountdownListener {
 	Image spriteMoveRight;
 	Image sprite;
 
+	SoundManager soundManager = new SoundManager();
 
 
 
@@ -47,6 +53,7 @@ public class NewCountdownAnimation implements CountdownListener {
 		this.countdownController = countdownController;
 		countdownController.addCountdownListener(this);
 
+		
 		spriteSelection = new SpriteSelection(countdownController);		
 
 		spriteMoveLeft = new Image(spriteSelection.getSpriteGoLeft());
@@ -149,7 +156,8 @@ public class NewCountdownAnimation implements CountdownListener {
 		Widget widget;
 		int startPos = 0;
 		int endPos = 0;
-
+		
+		
 		public VerticalMove(AbsolutePanel p, Widget w) {
 			super();
 			this.panel = p;
@@ -240,7 +248,13 @@ public class NewCountdownAnimation implements CountdownListener {
 	}
 
 	private class SpriteController {
+		Audio goalSound;
 
+		public SpriteController() {
+			System.out.println("SpriteController: soundmanager = " + soundManager);
+			goalSound = soundManager.initSound(SOUNDS_PATH + SOUND_GOAL_REACHED);
+		}
+		
 		public void moveAlongGroundFinished (int ground) {
 			System.out.println("SpriteController: moveAlongGroundFinished with ground " + ground);
 			if (0 == ground) {
@@ -255,6 +269,8 @@ public class NewCountdownAnimation implements CountdownListener {
 			System.out.println("SpriteController: moveToNextGroundFinished with ground " + ground);
 			startMoveAlongGround(ground - 1);
 		}
+		
+		
 		private void startGoalAnimation() {
 			//Window.alert("Hurray!!");
 			
@@ -262,10 +278,9 @@ public class NewCountdownAnimation implements CountdownListener {
 			//TODO: have "dancing" sprite here
 			countdownPanel.add(sprite, params.endLRMove, params.getY(0));
 			
-			SoundController soundController = new SoundController();
-			Sound sound = soundController.createSound(Sound.MIME_TYPE_AUDIO_WAV_UNKNOWN,
-					"sounds/fanfare.wav");
-			sound.play();
+			goalSound.play();
+			goalSound = soundManager.initSound(SOUNDS_PATH + SOUND_GOAL_REACHED);
+
 			countdownController.finishCountdown();
 		}
 		private void startMoveToNextGround(int ground) {
@@ -292,8 +307,11 @@ public class NewCountdownAnimation implements CountdownListener {
 		private int currentGround;
 		private SpriteController callback;
 
+		Audio sound;
+		
 		public MoveToNextGroundAnimation() {
 			super(countdownPanel, sprite);
+			sound = soundManager.initSound(SOUNDS_PATH + SOUND_GO_NEXT_GROUND);
 			System.out.println("MoveToNextGroundAnimation created");
 		}
 
@@ -325,11 +343,9 @@ public class NewCountdownAnimation implements CountdownListener {
 		@Override
 		protected void onStart() {
 			super.onStart();
-			SoundController soundController = new SoundController();
-			Sound sound = soundController.createSound(Sound.MIME_TYPE_AUDIO_WAV_UNKNOWN,
-					"sounds/pieww_jump.wav");
-
-			sound.play();
+			soundManager.play(sound);
+			sound = soundManager.initSound(SOUNDS_PATH + SOUND_GO_NEXT_GROUND);
+			
 		}
 
 		@Override
@@ -414,6 +430,21 @@ public class NewCountdownAnimation implements CountdownListener {
 		System.out.println("start countdown at " + getTime() 
 				+  " with " + countdownController.getStartTime() + " minutes to go." );
 
+
+		// remove sprites from previous animations
+		sprite.removeFromParent();
+		
+		// use current sprite from sprite selection
+		spriteMoveLeft = new Image(spriteSelection.getSpriteGoLeft());
+		spriteMoveLeft.setSize(CountdownParameters.SPRITE_WIDTH + "px", CountdownParameters.SPRITE_HEIGHT + "px");
+
+		spriteMoveRight = new Image(spriteSelection.getSpriteGoRight());
+		spriteMoveRight.setSize(CountdownParameters.SPRITE_WIDTH + "px", CountdownParameters.SPRITE_HEIGHT + "px");
+
+		sprite = new Image(spriteSelection.getSpriteStill());
+		sprite.setSize(CountdownParameters.SPRITE_WIDTH + "px", CountdownParameters.SPRITE_HEIGHT + "px");
+
+		
 		spriteController.startMoveAlongGround(startGround);
 
 

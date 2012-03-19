@@ -2,9 +2,11 @@ package com.dreamboxx.client;
 
 import com.allen_sauer.gwt.voices.client.Sound;
 import com.allen_sauer.gwt.voices.client.SoundController;
+import com.google.gwt.dom.client.MediaElement;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.media.client.Audio;
 import com.google.gwt.user.client.ui.*;
 
 public class TimeSelection implements CountdownListener {
@@ -15,6 +17,12 @@ public class TimeSelection implements CountdownListener {
 	private static final String BUTTON_IMAGE_PATH = "images/countdownButtons/";
 	private final int[] startTimes = {1, 2, 5, 10}; //start times in minutes
 	private RadioButton starttimeSelectionButtons[];
+
+
+	private static String SOUNDS_PATH = "sounds/";
+	final static String SOUND_COUNTDOWN_START_CLICK = "gong";
+	final static String SOUND_TIME_SELECTION_CLICK = "plop";
+
 
 	private Button startButton;
 	private Image startButtonImage;
@@ -28,10 +36,12 @@ public class TimeSelection implements CountdownListener {
 	private Label starttimeSelectionLabel;
 
 	HorizontalPanel buttonPanel;
+	private final  SoundManager soundManager;
 
 	public TimeSelection(final CountdownController countdownController) {
 
 		countdownController.addCountdownListener(this);
+		soundManager = new SoundManager();
 
 
 		starttimeSelectionLabel = new Label("1");
@@ -79,15 +89,18 @@ public class TimeSelection implements CountdownListener {
 
 	private void createStartButton(final CountdownController countdownController) {
 		//put start button on UI
+
+
 		ClickHandler startButtonHandler = new ClickHandler() {
+			Audio sound = soundManager.initSound(SOUNDS_PATH + SOUND_COUNTDOWN_START_CLICK);
+
 			public void onClick(ClickEvent event) {
 				int startTime = Integer.parseInt(starttimeSelectionLabel.getText());
-				SoundController soundController = new SoundController();
-				Sound sound = soundController.createSound(Sound.MIME_TYPE_AUDIO_WAV_UNKNOWN,
-						"sounds/gong.wav");
-				sound.setVolume(30);
-				sound.play();
-			countdownController.updateStartTime(startTime);
+
+				soundManager.play(sound);
+				sound = soundManager.initSound(SOUNDS_PATH + SOUND_COUNTDOWN_START_CLICK);
+
+				countdownController.updateStartTime(startTime);
 				countdownController.startCountdown();
 			}
 		};
@@ -117,15 +130,14 @@ public class TimeSelection implements CountdownListener {
 
 
 		button.addClickHandler(new ClickHandler () {
+
+			Audio sound = soundManager.initSound(SOUNDS_PATH + SOUND_TIME_SELECTION_CLICK);
+
 			public void onClick(ClickEvent event) {
-
-				SoundController soundController = new SoundController();
-				Sound sound = soundController.createSound(Sound.MIME_TYPE_AUDIO_WAV_UNKNOWN,
-						"sounds/plop.wav");
-				sound.setVolume(20);
-				sound.play();
-
 				int currentTime = Integer.parseInt(starttimeSelectionLabel.getText());
+				sound.play();
+				sound = soundManager.initSound(SOUNDS_PATH + SOUND_TIME_SELECTION_CLICK);
+				//soundManager.play(sound);
 
 				if ((direction == IS_UP_BUTTON) && (currentTime < CountdownParameters.NUMBER_OF_GROUNDS)) {
 					starttimeSelectionLabel.setText("" + (currentTime + 1));
