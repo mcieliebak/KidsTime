@@ -32,10 +32,10 @@ public class CountdownParameters {
 
 	/* ANIMATION TIMES */ 
 
-	public static final int TIME_PER_GROUND = 6000; //milliseconds //TODO: increase to 60'000 for full minutes
+	public static final int TIME_MOVE_ALONG_GROUND = 6000; //milliseconds //TODO: increase to 60'000 for full minutes
 	// public static final int TIME_WAIT_BEFORE_MOVE = 2000; // ms; turn around during this wait
 	//public static final int TIME_WAIT_BEFORE_JUMP = 1000; //ms
-	public static final int TIME_MOVE_TO_NEXT_GROUND = 2000; //ms
+	public static final int TIME_JUMP_TO_NEXT_GROUND = 2000; //ms
 
 
 

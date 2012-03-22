@@ -120,7 +120,7 @@ public class KidsTime implements EntryPoint {
 		
 	    CountdownController countdownController = new CountdownController();
 		
-		NewCountdownAnimation animation = new NewCountdownAnimation(countdownController);
+		CountdownAnimation animation = new CountdownAnimation(countdownController);
 		TimeSelection timeSelection = new TimeSelection(countdownController);
 		
 	}

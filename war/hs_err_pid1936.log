@@ -1,0 +1,117 @@
+#
+# There is insufficient memory for the Java Runtime Environment to continue.
+# Native memory allocation (malloc) failed to allocate 4092 bytes for char in c:\build_area\jdk6_30\hotspot\src\share\vm\utilities/stack.inline.hpp
+# Possible reasons:
+#   The system is out of physical RAM or swap space
+#   In 32 bit mode, the process size limit was hit
+# Possible solutions:
+#   Reduce memory load on the system
+#   Increase physical memory or swap space
+#   Check if swap backing store is full
+#   Use 64 bit Java on a 64 bit OS
+#   Decrease Java heap size (-Xmx/-Xms)
+#   Decrease number of Java threads
+#   Decrease Java thread stack sizes (-Xss)
+#   Set larger code cache with -XX:ReservedCodeCacheSize=
+# This output file may be truncated or incomplete.
+#
+#  Out of Memory Error (memory/allocation.inline.hpp:44), pid=1936, tid=1680
+#
+# JRE version: 6.0_30-b12
+# Java VM: Java HotSpot(TM) Client VM (20.5-b03 mixed mode, sharing windows-x86 )
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x01560c00):  VMThread [stack: 0x03890000,0x038e0000] [id=1680]
+
+Stack: [0x03890000,0x038e0000],  sp=0x038df990,  free space=318k
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+
+[error occurred during error reporting (printing native stack), id 0xc0000005]
+
+VM_Operation (0x0492f318): GenCollectForAllocation, mode: safepoint, requested by thread 0x03c1cc00
+
+
+---------------  P R O C E S S  ---------------
+
+Java Threads: ( => current thread )
+  0x03c1dc00 JavaThread "CompilationUnitBuilder" daemon [_thread_blocked, id=4936, stack(0x04930000,0x04980000)]
+  0x03c1cc00 JavaThread "Code server for kidstime from Mozilla/5.0 (Windows NT 6.1) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11 on http://127.0.0.1:8888/kidstime/hosted.html?kidstime @ N{}Q,aIg1U]KBpv{" daemon [_thread_blocked, id=4764, stack(0x048e0000,0x04930000)]
+  0x03c1c000 JavaThread "Code server for kidstime from Mozilla/5.0 (Windows NT 6.1) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11 on http://127.0.0.1:8888/kidstime/hosted.html?kidstime @ gy-g*gBLg#T$c%Ux" daemon [_thread_in_native, id=5396, stack(0x04890000,0x048e0000)]
+  0x03c1b000 JavaThread "btpool0-63" [_thread_blocked, id=4468, stack(0x047f0000,0x04840000)]
+  0x03c1bc00 JavaThread "btpool0-62" [_thread_blocked, id=4180, stack(0x04380000,0x043d0000)]
+  0x03c1b400 JavaThread "btpool0-61" [_thread_blocked, id=3580, stack(0x04330000,0x04380000)]
+  0x03c1a000 JavaThread "btpool0-60" [_thread_blocked, id=5192, stack(0x042e0000,0x04330000)]
+  0x03c1c800 JavaThread "btpool0-56 - Acceptor0 SelectChannelConnector@127.0.0.1:8888" [_thread_blocked, id=896, stack(0x04240000,0x04290000)]
+  0x03c1d400 JavaThread "btpool0-55" [_thread_blocked, id=5484, stack(0x03fe0000,0x04030000)]
+  0x03c1a800 JavaThread "Timer-9" daemon [_thread_blocked, id=3952, stack(0x03f40000,0x03f90000)]
+  0x04e3a400 JavaThread "GC Daemon" daemon [_thread_blocked, id=4804, stack(0x03e80000,0x03ed0000)]
+  0x03d09800 JavaThread "com.google.gwt.thirdparty.guava.common.base.internal.Finalizer" daemon [_thread_blocked, id=6132, stack(0x043d0000,0x04420000)]
+  0x0161a400 JavaThread "Code server listener" daemon [_thread_in_native, id=4792, stack(0x04070000,0x040c0000)]
+  0x03be1400 JavaThread "UnitWriteThread" daemon [_thread_blocked, id=3744, stack(0x03f90000,0x03fe0000)]
+  0x03bbc000 JavaThread "Thread-1" daemon [_thread_blocked, id=4976, stack(0x03e30000,0x03e80000)]
+  0x03bb5000 JavaThread "Thread-0" [_thread_in_native, id=2868, stack(0x03de0000,0x03e30000)]
+  0x015b3000 JavaThread "Low Memory Detector" daemon [_thread_blocked, id=2332, stack(0x03a70000,0x03ac0000)]
+  0x015adc00 JavaThread "C1 CompilerThread0" daemon [_thread_blocked, id=3312, stack(0x03a20000,0x03a70000)]
+  0x015acc00 JavaThread "Attach Listener" daemon [_thread_blocked, id=4328, stack(0x039d0000,0x03a20000)]
+  0x015abc00 JavaThread "Signal Dispatcher" daemon [_thread_blocked, id=3384, stack(0x03980000,0x039d0000)]
+  0x015a2400 JavaThread "Finalizer" daemon [_thread_blocked, id=1100, stack(0x03930000,0x03980000)]
+  0x0159d000 JavaThread "Reference Handler" daemon [_thread_blocked, id=4044, stack(0x038e0000,0x03930000)]
+  0x00349800 JavaThread "main" [_thread_blocked, id=5628, stack(0x003a0000,0x003f0000)]
+
+Other Threads:
+=>0x01560c00 VMThread [stack: 0x03890000,0x038e0000] [id=1680]
+  0x015c4400 WatcherThread [stack: 0x03ac0000,0x03b10000] [id=5688]
+
+VM state:at safepoint (normal execution)
+
+VM Mutex/Monitor currently owned by a thread:  ([mutex/lock_event])
+[0x00347bc8] Threads_lock - owner thread: 0x01560c00
+[0x00347fd8] Heap_lock - owner thread: 0x03c1cc00
+
+Heap
+ def new generation   total 63360K, used 63360K [0x136e0000, 0x17b90000, 0x1e180000)
+  eden space 56384K, 100% used [0x136e0000, 0x16df0000, 0x16df0000)
+  from space 6976K, 100% used [0x174c0000, 0x17b90000, 0x17b90000)
+  to   space 6976K,  99% used [0x16df0000, 0x174bfff8, 0x174c0000)
+ tenured generation   total 150852K, used 150851K [0x1e180000, 0x274d1000, 0x336e0000)
+   the space 150852K,  99% used [0x1e180000, 0x274d0ff8, 0x274d1000, 0x274d1000)
+ compacting perm gen  total 15872K, used 15837K [0x336e0000, 0x34660000, 0x376e0000)
+   the space 15872K,  99% used [0x336e0000, 0x34657438, 0x34657600, 0x34660000)
+    ro space 10240K,  51% used [0x376e0000, 0x37c0da30, 0x37c0dc00, 0x380e0000)
+    rw space 12288K,  55% used [0x380e0000, 0x38779b50, 0x38779c00, 0x38ce0000)
+
+Code Cache  [0x01630000, 0x01e00000, 0x03630000)
+ total_blobs=3575 nmethods=3416 adapters=91 free_code_cache=25398976 largest_free_block=384
+
+Dynamic libraries:
+
+[error occurred during error reporting (printing dynamic libraries), id 0xc0000005]
+
+VM Arguments:
+jvm_args: -Xmx512m -Dfile.encoding=Cp1252 
+java_command: com.google.gwt.dev.DevMode -remoteUI 49289:1756713040768 -startupUrl KidsTime.html -logLevel INFO -codeServerPort 9997 -port 8888 -war C:\Users\bm\Documents\200 Java Entwicklung\workspace\KidsTime\war com.dreamboxx.KidsTime
+Launcher Type: SUN_STANDARD
+
+Environment Variables:
+CLASSPATH=.;C:\Program Files\Java\jre6\lib\ext\QTJava.zip
+PATH=C:/Program Files/Java/jre6/bin/client;C:/Program Files/Java/jre6/bin;C:/Program Files/Java/jre6/lib/i386;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files\Common Files\Acronis\SnapAPI\;C:\Program Files\Toshiba\Bluetooth Toshiba Stack\sys\;C:\Program Files\Git\cmd;C:\Program Files\QuickTime\QTSystem\;C:\Users\bm\Documents\200 Java Entwicklung\eclipse;
+USERNAME=bm
+OS=Windows_NT
+PROCESSOR_IDENTIFIER=x86 Family 6 Model 15 Stepping 6, GenuineIntel
+
+
+
+---------------  S Y S T E M  ---------------
+
+OS: Windows 7 Build 7601 Service Pack 1
+
+CPU:total 2 (2 cores per cpu, 1 threads per core) family 6 model 15 stepping 6, cmov, cx8, fxsr, mmx, sse, sse2, sse3, ssse3
+
+Memory: 4k page, physical 2095288k(208508k free), swap 2335936k(5064k free)
+
+vm_info: Java HotSpot(TM) Client VM (20.5-b03) for windows-x86 JRE (1.6.0_30-b12), built on Nov 10 2011 01:51:00 by "java_re" with MS VC++ 7.1 (VS2003)
+
+time: Sat Mar 17 12:16:05 2012
+elapsed time: 1315 seconds
+

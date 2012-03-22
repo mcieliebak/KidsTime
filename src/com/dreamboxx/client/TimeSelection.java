@@ -1,9 +1,5 @@
 package com.dreamboxx.client;
 
-import com.allen_sauer.gwt.voices.client.Sound;
-import com.allen_sauer.gwt.voices.client.SoundController;
-import com.google.gwt.dom.client.MediaElement;
-import com.google.gwt.dom.client.Node;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.media.client.Audio;
@@ -15,12 +11,9 @@ public class TimeSelection implements CountdownListener {
 	private static final boolean IS_DOWN_BUTTON = false;
 
 	private static final String BUTTON_IMAGE_PATH = "images/countdownButtons/";
-	private final int[] startTimes = {1, 2, 5, 10}; //start times in minutes
-	private RadioButton starttimeSelectionButtons[];
 
-
-	private static String SOUNDS_PATH = "sounds/";
-	final static String SOUND_COUNTDOWN_START_CLICK = "gong";
+	private static String SOUNDS_PATH = "sounds/countdown/";
+	final static String SOUND_COUNTDOWN_START_CLICK = "click";
 	final static String SOUND_TIME_SELECTION_CLICK = "plop";
 
 
@@ -51,14 +44,13 @@ public class TimeSelection implements CountdownListener {
 
 
 		// up and down buttons
-		upImage = new Image(BUTTON_IMAGE_PATH + "up.png"); // TODO: this should be more generic
+		upImage = new Image(BUTTON_IMAGE_PATH + "up.png"); 
 		upButton = createTimeSelectionButton(IS_UP_BUTTON, upImage);
-		downImage = new Image(BUTTON_IMAGE_PATH + "down.png"); // TODO: this should be more generic
+		downImage = new Image(BUTTON_IMAGE_PATH + "down.png");
 		downButton = createTimeSelectionButton(IS_DOWN_BUTTON, downImage);
 
 		VerticalPanel upDownPanel = new VerticalPanel();
 		upDownPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-		//		upDownPanel.setStylePrimaryName(countdownUpDownPanel);
 		upDownPanel.setWidth("70px");
 		upDownPanel.add(upButton);
 		upDownPanel.add(downButton);
@@ -106,14 +98,16 @@ public class TimeSelection implements CountdownListener {
 		};
 
 
-		startButtonImageDisabled = new Image(BUTTON_IMAGE_PATH + "startDisabled.png");
-		startButtonImageDisabled.setHeight("50px");
-		startButtonImageDisabled.setWidth("50px");
-
+		
 		startButtonImage = new Image(BUTTON_IMAGE_PATH + "start.png");
-		startButtonImage.setHeight("50px");
-		startButtonImage.setWidth("50px");
-
+		//startButtonImage.setHeight("50px");
+		//startButtonImage.setWidth("50px");
+		startButtonImage.setStylePrimaryName("countdownStartButtonImage");
+		
+		startButtonImageDisabled = new Image(BUTTON_IMAGE_PATH + "startDisabled.png");
+		//startButtonImageDisabled.setHeight("50px");
+		//startButtonImageDisabled.setWidth("50px");
+		startButtonImageDisabled.setStylePrimaryName("countdownStartButtonImage");
 
 		startButton = new Button();
 		startButton.addClickHandler(startButtonHandler);
@@ -123,9 +117,8 @@ public class TimeSelection implements CountdownListener {
 
 	private Button createTimeSelectionButton (final boolean direction, Image buttonImage) {
 		Button button = new Button();
-
-		buttonImage.setHeight("30px");
-		buttonImage.setWidth("30px");
+		
+		buttonImage.setStylePrimaryName("countdownTimeSelectionButton");
 		button.getElement().appendChild(buttonImage.getElement());		
 
 
@@ -135,9 +128,9 @@ public class TimeSelection implements CountdownListener {
 
 			public void onClick(ClickEvent event) {
 				int currentTime = Integer.parseInt(starttimeSelectionLabel.getText());
+
 				sound.play();
 				sound = soundManager.initSound(SOUNDS_PATH + SOUND_TIME_SELECTION_CLICK);
-				//soundManager.play(sound);
 
 				if ((direction == IS_UP_BUTTON) && (currentTime < CountdownParameters.NUMBER_OF_GROUNDS)) {
 					starttimeSelectionLabel.setText("" + (currentTime + 1));
@@ -145,7 +138,8 @@ public class TimeSelection implements CountdownListener {
 					starttimeSelectionLabel.setText("" + (currentTime - 1));
 
 				} else {
-					//TODO: ignore click, notify user	
+					//ignore click
+					//TODO: notify user that boundaries are reached
 				}
 			}
 		});
