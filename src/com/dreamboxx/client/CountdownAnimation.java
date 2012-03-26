@@ -31,12 +31,12 @@ public class CountdownAnimation implements CountdownListener {
 	private CountdownController countdownController;
 	private SpriteSelection spriteSelection;
 
+	SoundManager soundManager = new SoundManager();
 	private SpriteController spriteController = new SpriteController();
 	Image spriteMoveLeft;
 	Image spriteMoveRight;
 	Image sprite;
 
-	SoundManager soundManager = new SoundManager();
 
 
 
