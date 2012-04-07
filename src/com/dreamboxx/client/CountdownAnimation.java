@@ -2,9 +2,6 @@ package com.dreamboxx.client;
 
 
 import java.util.Date;
-//import org.slf4j.Logger;
-//import org.slf4j.LoggerFactory;
-
 
 import com.google.gwt.animation.client.Animation;
 import com.google.gwt.canvas.client.Canvas;
@@ -16,7 +13,7 @@ import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
-
+import com.allen_sauer.gwt.log.client.Log;
 
 
 public class CountdownAnimation implements CountdownListener {
@@ -38,10 +35,202 @@ public class CountdownAnimation implements CountdownListener {
 	Image sprite;
 
 
+	    
+	private class JumpAnimation extends Animation {
+		
+		public static final double GRAVITATION_CONSTANT = -9.81;
+		public static final double JUMP_FACTOR = 5;
+		
+			AbsolutePanel panel;
+			Widget widget;
+			int startPosX = 0;
+			int startPosY = 0;
+			int endPosX = 0;
+			int endPosY = 0;
+			double initialSpeedY = 0;
+			
+			
+			
+			public JumpAnimation(AbsolutePanel p, Widget w) {
+				super();
+				this.panel = p;
+				this.widget = w;		
+			}
+		
+			public void setWidget(Widget w) {
+				this.widget = w;
+			}
+		
+			public void setParams(int startPosX, int startPosY, int endPosX, int endPosY) {
+				this.startPosX = startPosX; 
+				this.startPosY = startPosY;
+				this.endPosX = endPosX;
+				this.endPosY = endPosY;
+				
+				initialSpeedY = (endPosY - startPosY + GRAVITATION_CONSTANT / 2.0 * JUMP_FACTOR * JUMP_FACTOR) / JUMP_FACTOR;
+			}
+		
+			@Override
+			protected void onStart() {
+				super.onStart();
+				Log.debug("Jump from (" + startPosX + ", " + startPosY + ") to (" + endPosX + ", " + endPosY + ") with speed " + initialSpeedY + " starts");
+			}
+		
+			@Override
+			protected void onComplete() {
+				super.onComplete();
+				Log.debug("Jump completed."); 
+			}
+		
+			@Override
+			protected void onUpdate(double progress) {
+				
+				
+				// horizontal movement is uniform from start to end
+				int x = (int) (progress * (endPosX - startPosX) + startPosX); 
+	
+				// vertical movement
+				double t = progress * JUMP_FACTOR;
+				int y = (int) (startPosY + initialSpeedY * t 
+						- GRAVITATION_CONSTANT / 2.0 * t * t);
+
+				panel.setWidgetPosition(widget, x , y);
+	
+			}
+		}
+
+
+	
+	public class JumpToNextGroundAnimation extends JumpAnimation {
+		private int currentGround;
+		private SpriteController callback;
+	
+		Audio sound;
+		
+		public JumpToNextGroundAnimation() {
+			super(countdownPanel, sprite);
+			sound = soundManager.initSound(SOUNDS_PATH + SOUND_GO_NEXT_GROUND);		
+		}
+	
+		public void setCurrentGround(int currentGround) {
+			this.currentGround = currentGround;
+			int startY = params.getY(currentGround);
+			int endY = params.getY(currentGround - 1);
+	
+			int startX;
+			int endX;
+			//TODO: put getX into a method in params
+
+			if (params.isLRmove(currentGround)) {
+				startX = params.endLRMove;
+				endX = params.startRLMove;
+				setWidget(spriteMoveRight);
+			}
+			else {
+				startX = params.endRLMove;
+				endX = params.startLRMove;
+				setWidget(spriteMoveLeft);
+			}
+	
+			panel.add(widget, startX, startY);
+			super.setParams(startX, startY, endX, endY);
+			Log.debug("Jump parameters set to: " 
+					+ "startX = " + startX 
+					+ ", startY = " + startY 
+					+ ", endX = " + endX
+					+ ", endY = " + endY + ".");
+		}
+	
+		public void setCallback(SpriteController callback) {
+			this.callback = callback;
+		}
+		
+		
+		@Override
+		protected void onStart() {
+			super.onStart();
+			soundManager.play(sound);
+			sound = soundManager.initSound(SOUNDS_PATH + SOUND_GO_NEXT_GROUND);
+			Log.debug("JumpToNextGroundAnimation starts");
+		}
+	
+		@Override
+		protected void onComplete() {
+			super.onComplete();
+			widget.removeFromParent();
+			callback.moveToNextGroundFinished(currentGround);
+	
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	private class SpriteController {
+		Audio goalSound;
+	
+		public SpriteController() {
+			Log.debug("SpriteController: soundmanager = " + soundManager);
+			goalSound = soundManager.initSound(SOUNDS_PATH + SOUND_GOAL_REACHED);
+			goalSound.setVolume(0.5);
+		}
+		
+		public void moveAlongGroundFinished (int ground) {
+			Log.debug("SpriteController: moveAlongGroundFinished with ground " + ground);
+			if (0 == ground) {
+				//last ground is finished
+				startGoalAnimation();
+			} else {
+				startMoveToNextGround(ground);
+			}
+		}
+	
+		public void moveToNextGroundFinished(int ground) {
+			Log.debug("SpriteController: moveToNextGroundFinished with ground " + ground);
+			startMoveAlongGround(ground - 1);
+		}
+		
+		
+		private void startGoalAnimation() {
+			
+			//sprite was removed at end of Animation, hence, show again
+			//TODO: have "dancing" sprite here
+			countdownPanel.add(sprite, params.endLRMove, params.getY(0));
+			
+			goalSound.play();
+			goalSound = soundManager.initSound(SOUNDS_PATH + SOUND_GOAL_REACHED);
+	
+			countdownController.finishCountdown();
+		}
+		
+		private void startMoveToNextGround(int ground) {
+			Log.debug("startMoveToNextGround started with ground " + ground);
+			JumpToNextGroundAnimation anim = new JumpToNextGroundAnimation();
+			anim.setCurrentGround(ground);
+			anim.setCallback(this);
+			anim.run(CountdownParameters.TIME_JUMP_TO_NEXT_GROUND);
+		}
+		
+		public void startMoveAlongGround(int ground) {
+			Log.debug("startMoveAlongGround started with ground " + ground);
+	
+			MoveAlongGroundAnimation anim = new MoveAlongGroundAnimation();
+			anim.setCallback(this);
+			anim.setCurrentGround(ground);
+			anim.run(CountdownParameters.TIME_MOVE_ALONG_GROUND - CountdownParameters.TIME_JUMP_TO_NEXT_GROUND);
+		}
+	}
+
+	
 
 
 	public CountdownAnimation (CountdownController countdownController) {
-		System.out.println("Animation constructor: countdownController is " + countdownController);
+		Log.debug("Animation constructor: countdownController is " + countdownController);
 		this.countdownController = countdownController;
 		countdownController.addCountdownListener(this);
 
@@ -76,7 +265,7 @@ public class CountdownAnimation implements CountdownListener {
 		// each ground covers exactly one minute
 		// hence, starting ground is countdown-time - 1
 		final int startGround = countdownController.getStartTime() - 1; // TODO: at the moment countdownTime is only in full minutes; improve to consider also seconds
-		System.out.println("start countdown at " + getTime() 
+		Log.debug("start countdown at " + getTime() 
 				+  " with " + countdownController.getStartTime() + " minutes to go." );
 
 
@@ -160,7 +349,7 @@ public class CountdownAnimation implements CountdownListener {
 	
 			}
 	
-			System.out.println("ground i = " + i + " x = " + xLeft + " y = " + yTop + " width = " + width + " depth = " + depth); 
+			Log.debug("ground i = " + i + " x = " + xLeft + " y = " + yTop + " width = " + width + " depth = " + depth); 
 			drawGround(canvas.getContext2d(), xLeft, yTop, width, depth, 1); 
 	
 		}
@@ -196,7 +385,7 @@ public class CountdownAnimation implements CountdownListener {
 		int x = params.endLRMove + 50;
 		int y = params.getY(0);
 		countdownPanel.add(goalImage, x, y);
-		System.out.println("goal is added to panel at x = " + x + " y = " + y);
+		Log.debug("goal is added to panel at x = " + x + " y = " + y);
 	}
 
 
@@ -208,116 +397,116 @@ public class CountdownAnimation implements CountdownListener {
 		return(dtf.format(date, TimeZone.createTimeZone(-60)));
 	}
 
-	private class SpriteController {
-		Audio goalSound;
-	
-		public SpriteController() {
-			System.out.println("SpriteController: soundmanager = " + soundManager);
-			goalSound = soundManager.initSound(SOUNDS_PATH + SOUND_GOAL_REACHED);
-			goalSound.setVolume(0.5);
-		}
-		
-		public void moveAlongGroundFinished (int ground) {
-			System.out.println("SpriteController: moveAlongGroundFinished with ground " + ground);
-			if (0 == ground) {
-				//last ground is finished
-				startGoalAnimation();
-			} else {
-				startMoveToNextGround(ground);
-			}
-		}
-	
-		public void moveToNextGroundFinished(int ground) {
-			System.out.println("SpriteController: moveToNextGroundFinished with ground " + ground);
-			startMoveAlongGround(ground - 1);
-		}
-		
-		
-		private void startGoalAnimation() {
-			//Window.alert("Hurray!!");
-			
-			//sprite was removed at end of Animation, hence, show again
-			//TODO: have "dancing" sprite here
-			countdownPanel.add(sprite, params.endLRMove, params.getY(0));
-			
-			goalSound.play();
-			goalSound = soundManager.initSound(SOUNDS_PATH + SOUND_GOAL_REACHED);
-	
-			countdownController.finishCountdown();
-		}
-		
-		private void startMoveToNextGround(int ground) {
-			System.out.println("startMoveToNextGround started with ground " + ground);
-			MoveToNextGroundAnimation anim = new MoveToNextGroundAnimation();
-			anim.setCurrentGround(ground);
-			anim.setCallback(this);
-			anim.run(CountdownParameters.TIME_JUMP_TO_NEXT_GROUND);
-		}
-		
-		public void startMoveAlongGround(int ground) {
-			System.out.println("startMoveAlongGround started with ground " + ground);
-	
-			MoveAlongGroundAnimation anim = new MoveAlongGroundAnimation();
-			anim.setCallback(this);
-			anim.setCurrentGround(ground);
-			anim.run(CountdownParameters.TIME_MOVE_ALONG_GROUND - CountdownParameters.TIME_JUMP_TO_NEXT_GROUND);
-		}
-	}
-
-	private class MoveToNextGroundAnimation extends VerticalMove {
-		private int currentGround;
-		private SpriteController callback;
-	
-		Audio sound;
-		
-		public MoveToNextGroundAnimation() {
-			super(countdownPanel, sprite);
-			sound = soundManager.initSound(SOUNDS_PATH + SOUND_GO_NEXT_GROUND);
-			System.out.println("MoveToNextGroundAnimation created");
-		}
-	
-		public void setCurrentGround(int currentGround) {
-			this.currentGround = currentGround;
-			int startY = params.getY(currentGround);
-			int endY = params.getY(currentGround - 1);
-	
-			int x;
-			//TODO: put getX into a method in params
-			if (params.isLRmove(currentGround)) {
-				x = params.endLRMove;
-				setWidget(spriteMoveRight);
-			}
-			else {
-				x = params.endRLMove;
-				setWidget(spriteMoveLeft);
-			}
-	
-			panel.add(widget, x, startY);
-			super.setParams(startY, endY);
-		}
-	
-		public void setCallback(SpriteController callback) {
-			this.callback = callback;
-		}
-		
-		
-		@Override
-		protected void onStart() {
-			super.onStart();
-			soundManager.play(sound);
-			sound = soundManager.initSound(SOUNDS_PATH + SOUND_GO_NEXT_GROUND);
-			
-		}
-	
-		@Override
-		protected void onComplete() {
-			super.onComplete();
-			widget.removeFromParent();
-			callback.moveToNextGroundFinished(currentGround);
-	
-		}
-	}
-
+//	private class SpriteController {
+//		Audio goalSound;
+//	
+//		public SpriteController() {
+//			System.out.println("SpriteController: soundmanager = " + soundManager);
+//			goalSound = soundManager.initSound(SOUNDS_PATH + SOUND_GOAL_REACHED);
+//			goalSound.setVolume(0.5);
+//		}
+//		
+//		public void moveAlongGroundFinished (int ground) {
+//			System.out.println("SpriteController: moveAlongGroundFinished with ground " + ground);
+//			if (0 == ground) {
+//				//last ground is finished
+//				startGoalAnimation();
+//			} else {
+//				startMoveToNextGround(ground);
+//			}
+//		}
+//	
+//		public void moveToNextGroundFinished(int ground) {
+//			System.out.println("SpriteController: moveToNextGroundFinished with ground " + ground);
+//			startMoveAlongGround(ground - 1);
+//		}
+//		
+//		
+//		private void startGoalAnimation() {
+//			//Window.alert("Hurray!!");
+//			
+//			//sprite was removed at end of Animation, hence, show again
+//			//TODO: have "dancing" sprite here
+//			countdownPanel.add(sprite, params.endLRMove, params.getY(0));
+//			
+//			goalSound.play();
+//			goalSound = soundManager.initSound(SOUNDS_PATH + SOUND_GOAL_REACHED);
+//	
+//			countdownController.finishCountdown();
+//		}
+//		
+//		private void startMoveToNextGround(int ground) {
+//			System.out.println("startMoveToNextGround started with ground " + ground);
+//			MoveToNextGroundAnimation anim = new MoveToNextGroundAnimation();
+//			anim.setCurrentGround(ground);
+//			anim.setCallback(this);
+//			anim.run(CountdownParameters.TIME_JUMP_TO_NEXT_GROUND);
+//		}
+//		
+//		public void startMoveAlongGround(int ground) {
+//			System.out.println("startMoveAlongGround started with ground " + ground);
+//	
+//			MoveAlongGroundAnimation anim = new MoveAlongGroundAnimation();
+//			anim.setCallback(this);
+//			anim.setCurrentGround(ground);
+//			anim.run(CountdownParameters.TIME_MOVE_ALONG_GROUND - CountdownParameters.TIME_JUMP_TO_NEXT_GROUND);
+//		}
+//	}
+//
+//	private class MoveToNextGroundAnimation extends VerticalMove {
+//		private int currentGround;
+//		private SpriteController callback;
+//	
+//		Audio sound;
+//		
+//		public MoveToNextGroundAnimation() {
+//			super(countdownPanel, sprite);
+//			sound = soundManager.initSound(SOUNDS_PATH + SOUND_GO_NEXT_GROUND);
+//			System.out.println("MoveToNextGroundAnimation created");
+//		}
+//	
+//		public void setCurrentGround(int currentGround) {
+//			this.currentGround = currentGround;
+//			int startY = params.getY(currentGround);
+//			int endY = params.getY(currentGround - 1);
+//	
+//			int x;
+//			//TODO: put getX into a method in params
+//			if (params.isLRmove(currentGround)) {
+//				x = params.endLRMove;
+//				setWidget(spriteMoveRight);
+//			}
+//			else {
+//				x = params.endRLMove;
+//				setWidget(spriteMoveLeft);
+//			}
+//	
+//			panel.add(widget, x, startY);
+//			super.setParams(startY, endY);
+//		}
+//	
+//		public void setCallback(SpriteController callback) {
+//			this.callback = callback;
+//		}
+//		
+//		
+//		@Override
+//		protected void onStart() {
+//			super.onStart();
+//			soundManager.play(sound);
+//			sound = soundManager.initSound(SOUNDS_PATH + SOUND_GO_NEXT_GROUND);
+//			
+//		}
+//	
+//		@Override
+//		protected void onComplete() {
+//			super.onComplete();
+//			widget.removeFromParent();
+//			callback.moveToNextGroundFinished(currentGround);
+//	
+//		}
+//	}
+//
 	private class MoveAlongGroundAnimation extends HorizontalMove {
 		private int currentGround;
 		private SpriteController callback;
@@ -370,50 +559,49 @@ public class CountdownAnimation implements CountdownListener {
 		}
 	}
 
-	private class VerticalMove extends Animation {
-	
-		AbsolutePanel panel;
-		Widget widget;
-		int startPos = 0;
-		int endPos = 0;
-		
-		
-		public VerticalMove(AbsolutePanel p, Widget w) {
-			super();
-			this.panel = p;
-			this.widget = w;
-		}
-	
-		public void setParams(int startPos, int endPos) {
-			this.startPos = startPos; 
-			this.endPos = endPos;
-		}
-	
-		public void setWidget(Widget w) {
-			this.widget = w;
-		}
-		@Override
-		protected void onStart() {
-			super.onStart();
-			System.out.println("Vertical move of widget " + widget + " from " + startPos 
-					+ " to " + endPos + " starts.");
-		}
-	
-		@Override
-		protected void onComplete() {
-			super.onComplete();
-			System.out.println("Vertical move of widget " + widget + "completed."); 
-		}
-	
-		@Override
-		protected void onUpdate(double progress) {
-			//TODO: where to get parameters?
-			int x = panel.getWidgetLeft(widget);
-			int y = (int) (progress * (endPos - startPos) + startPos);
-			panel.setWidgetPosition(widget, x , y);
-		}
-	}
-
+//	private class VerticalMove extends Animation {
+//	
+//		AbsolutePanel panel;
+//		Widget widget;
+//		int startPos = 0;
+//		int endPos = 0;
+//		
+//		
+//		public VerticalMove(AbsolutePanel p, Widget w) {
+//			super();
+//			this.panel = p;
+//			this.widget = w;
+//		}
+//	
+//		public void setParams(int startPos, int endPos) {
+//			this.startPos = startPos; 
+//			this.endPos = endPos;
+//		}
+//	
+//		public void setWidget(Widget w) {
+//			this.widget = w;
+//		}
+//		@Override
+//		protected void onStart() {
+//			super.onStart();
+//			System.out.println("Vertical move of widget " + widget + " from " + startPos 
+//					+ " to " + endPos + " starts.");
+//		}
+//	
+//		@Override
+//		protected void onComplete() {
+//			super.onComplete();
+//			System.out.println("Vertical move of widget " + widget + "completed."); 
+//		}
+//	
+//		@Override
+//		protected void onUpdate(double progress) {
+//			int x = panel.getWidgetLeft(widget);
+//			int y = (int) (progress * (endPos - startPos) + startPos);
+//			panel.setWidgetPosition(widget, x , y);
+//		}
+//	}
+//
 
 	private class HorizontalMove extends Animation {
 	
@@ -440,30 +628,21 @@ public class CountdownAnimation implements CountdownListener {
 		@Override
 		protected void onStart() {
 			super.onStart();
-			System.out.println("Horizontal Move start");
-			System.out.println("Horizontal move of widget " + widget + " from " + startPos 
+			Log.debug("Horizontal move of widget " + widget + " from " + startPos 
 					+ " to " + endPos + " starts.");
 		}
 	
 		@Override
 		protected void onComplete() {
 			super.onComplete();
-			System.out.println("Horizontal move of widget " + widget + "completed."); 
+			Log.debug("Horizontal move of widget " + widget + "completed."); 
 		}
 	
 		@Override
 		protected void onUpdate(double progress) {
-			//TODO: where to get parameters?
-			//			System.out.println("Horizontal Move: update with progress = " + progress);
-			//			System.out.println("panel = " + panel);
-			//			System.out.println("widget = " + widget);
 			int x = (int) (progress * (endPos - startPos) + startPos);
 			int y = panel.getWidgetTop(widget);
-			//			System.out.println("x = " + x);
-			//			System.out.println("y = " + y);
 			panel.setWidgetPosition(widget, x , y);
-			//			System.out.println("Horizontal Move: update done.");
-	
 		}
 	}
 

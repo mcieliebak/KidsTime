@@ -20,6 +20,15 @@
  <!-- For development, a default of `DEBUG` is recommended -->
   <inherits name="com.allen_sauer.gwt.log.gwt-log-DEBUG" />
   
+  <!-- Loggers Enabled by default -->
+  <set-property name="log_ConsoleLogger" value="DISABLED" />
+  <set-property name="log_DivLogger" value="DISABLED" />
+  <set-property name="log_FirebugLogger" value="ENABLED" />
+  <set-property name="log_GWTLogger" value="DISABLED" />
+  <set-property name="log_SystemLogger" value="ENABLED" />
+  
+  <!-- Loggers Disabled by default -->
+  <set-property name="log_WindowLogger" value="DISABLED" />
 
 
   <!-- Specify the app entry point class.                         -->

@@ -1,0 +1,24 @@
+body: margin 0px -> ok
+
+increase button size -> ok
+
+replace gong and pieww -> ok
+
+link logo to kidstips.ch.appspot.com -> done
+
+replace logo with kidstips.ch
+
+try access without google login -> google service for that?
+
+increase time to 1 minute  
+
+check timing for 5-10min run
+
+is jump-time substracted from animation time? -> yes
+
+viewable part on Google Chrome is 1263 x 669
+
+reduce volume of fanfare -> 
+
+
+

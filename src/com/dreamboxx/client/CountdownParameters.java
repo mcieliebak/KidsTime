@@ -35,7 +35,7 @@ public class CountdownParameters {
 	public static final int TIME_MOVE_ALONG_GROUND = 6000; //milliseconds //TODO: increase to 60'000 for full minutes
 	// public static final int TIME_WAIT_BEFORE_MOVE = 2000; // ms; turn around during this wait
 	//public static final int TIME_WAIT_BEFORE_JUMP = 1000; //ms
-	public static final int TIME_JUMP_TO_NEXT_GROUND = 2000; //ms
+	public static final int TIME_JUMP_TO_NEXT_GROUND = 1000; //ms
 
 
 
@@ -50,9 +50,9 @@ public class CountdownParameters {
 	public CountdownParameters() {
 		
 		startLRMove = PADDING_GROUNDS_LEFT + GROUND_SIDESHIFT / 2;
-		endLRMove = PADDING_GROUNDS_LEFT + GROUND_WIDTH + GROUND_SIDESHIFT / 2 + - SPRITE_WIDTH;
-		startRLMove = endLRMove;
-		endRLMove = startLRMove;
+		endLRMove = PADDING_GROUNDS_LEFT + GROUND_WIDTH - GROUND_SIDESHIFT / 2 ;
+		startRLMove = endLRMove + GROUND_SIDESHIFT - SPRITE_WIDTH;
+		endRLMove = startLRMove + GROUND_SIDESHIFT - SPRITE_WIDTH;
 		
 	}
 

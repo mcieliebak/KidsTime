@@ -1,5 +1,6 @@
 package com.dreamboxx.client;
 
+import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.dom.client.MediaElement;
 import com.google.gwt.media.client.Audio;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -15,13 +16,7 @@ public class SoundManager {
 	private static String WAV_SUFFIX = ".wav";
 
 
-	// old code for using GWT Voices
-	//	SoundController soundController = new SoundController();
-	//	Sound sound = soundController.createSound(Sound.MIME_TYPE_AUDIO_WAV_UNKNOWN,
-	//			"sounds/plop.wav");
-	//	sound.setVolume(20);
-	//	sound.play();
-
+	
 	Audio audio;
 	private String canPlayMp3;
 	private String canPlayOgg;
@@ -60,36 +55,28 @@ public class SoundManager {
 			audio.setSrc(audioFilename + OGG_SUFFIX);
 		} else {
 			//TODO: handle case that no audio format is present
-			//throw new Exception("Could not find suitable audio format");
+			Log.warn("No suitable audio format", new Exception("Could not find suitable audio format to play " + audioFilename));
 		}
 
 		audio.load();
 		RootPanel.get().add(audio);
-		System.out.println("audio source = " + audio.getSrc() + "added");
+		Log.debug("audio source = " + audio.getSrc() + " added");
 
 		return audio;
 	}
 
 	public void play(Audio audio) {
-		System.out.println("playing sound " + audio.getSrc());
+		Log.trace("playing sound " + audio.getSrc());
 		audio.play();
 		//TODO: remove this hack. Is required since GWT plays a sound only once
 		//audio.setSrc(audio.getSrc());
  	}
 	
-//	public void playAudio2() {
-//		System.out.println("play audio2");
-//		System.out.println("audio2 = " + audio2);
-//		System.out.println("time = " + audio2.getCurrentTime());
-//		System.out.println("ready state = " + audio2.getReadyState());
-//		System.out.println("audio 2 lenght = " + audio2.getDuration());
-//		audio2.pause();
-//		audio2.setCurrentTime((double) 0.0);
-//		System.out.println("audio2 time = " + audio2.getCurrentTime());
-//		audio2.play();
-//
-//		//audio2 = loadSound(SOUND_TIME_SELECTION_CLICK);
-//		//audio2.load();
-//
-//	}
+	// old code for using GWT Voices
+		//	SoundController soundController = new SoundController();
+		//	Sound sound = soundController.createSound(Sound.MIME_TYPE_AUDIO_WAV_UNKNOWN,
+		//			"sounds/plop.wav");
+		//	sound.setVolume(20);
+		//	sound.play();
+
 }
