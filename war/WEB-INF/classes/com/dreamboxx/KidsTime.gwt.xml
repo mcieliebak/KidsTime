@@ -18,7 +18,7 @@
 -->
 
  <!-- For development, a default of `DEBUG` is recommended -->
-  <inherits name="com.allen_sauer.gwt.log.gwt-log-DEBUG" />
+  <inherits name="com.allen_sauer.gwt.log.gwt-log-TRACE" />
   
   <!-- Loggers Enabled by default -->
   <set-property name="log_ConsoleLogger" value="DISABLED" />

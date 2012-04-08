@@ -1,6 +1,9 @@
 package com.dreamboxx.client;
 
 import com.allen_sauer.gwt.log.client.Log;
+import com.dreamboxx.client.countdown.CountdownAnimation;
+import com.dreamboxx.client.countdown.CountdownController;
+import com.dreamboxx.client.countdown.TimeSelection;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 

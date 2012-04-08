@@ -1,0 +1,7 @@
+Git Commands
+
+git add <dir>
+
+git commit -a -m "<comment>"
+
+git push origin
